@@ -1,0 +1,683 @@
+<html lang="en">
+  <%- include("./partials/head.ejs") %>
+  <head>
+    <style>
+      #map {
+        height: 700;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include("./partials/nav.ejs") %>
+
+    <div id="map"></div>
+
+    <%- include("./partials/footer.ejs") %>
+
+    <script
+      defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-dFHYjTqEVLndbN2gdvXsx09jfJHmNc8&callback=initMap"
+    ></script>
+    <script>
+      // Malaysia bounds
+      const Malaysia_bounds = {
+        north: 8.23382,
+        south: -0.482804,
+        west: 97.760965,
+        east: 120.019265,
+      };
+
+      function initMap() {
+        // Map Options
+        var options = {
+          zoom: 7,
+          center: { lat: 2.39777, lng: 106.5658 },
+          // Restricting Map Bounds
+          restriction: {
+            latLngBounds: Malaysia_bounds,
+            strictBounds: false,
+          },
+        };
+
+        // New Map
+        if (document.title == "Teh Tarik | Data") {
+          swal(
+            "No data!",
+            "Please select the data set and display it in home page first, then the map can be loaded!",
+            "warning"
+          );
+          document.getElementById("map").innerHTML = "No data.";
+        } else {
+          var map = new google.maps.Map(
+            document.getElementById("map"),
+            options
+          );
+        }
+
+        // All markers store in a array
+        var markers = [
+          {
+            coords: { lat: 6.441213, lng: 100.191324 },
+            content: "<p>Hospital Tuanku Fauziah, Kangar</p>",
+          },
+          {
+            coords: { lat: 6.1486, lng: 100.4064 },
+            content: "<p>Hospital Sultanah Bahiyah</p>",
+          },
+          {
+            coords: { lat: 5.6696, lng: 100.5174 },
+            content: "<p>Hospital Sultan Abdul Halim</p>",
+          },
+          {
+            coords: { lat: 5.3931, lng: 100.573 },
+            content: "<p>Hospital Kulim</p>",
+          },
+          {
+            coords: { lat: 5.6788, lng: 100.9251 },
+            content: "<p>Hospital Baling</p>",
+          },
+          {
+            coords: { lat: 6.3248, lng: 99.7984 },
+            content: "<p>Hospital Langkawi</p>",
+          },
+          {
+            coords: { lat: 5.8111, lng: 100.7286 },
+            content: "<p>Hospital Sik</p>",
+          },
+          {
+            coords: { lat: 6.252886, lng: 100.609879 },
+            content: "<p>Hospital Kuala Nerang</p>",
+          },
+          {
+            coords: { lat: 6.2788, lng: 100.4191 },
+            content: "<p>Hospital Jitra</p>",
+          },
+          {
+            coords: { lat: 5.821, lng: 100.3843 },
+            content: "<p>Hospital Yan</p>",
+          },
+          {
+            coords: { lat: 5.4171, lng: 100.3114 },
+            content: "<p>Hospital Pulau Pinang</p>",
+          },
+          {
+            coords: { lat: 5.3593, lng: 100.4641 },
+            content: "<p>Hospital Bukit Mertajam</p>",
+          },
+          {
+            coords: { lat: 5.2196, lng: 100.498 },
+            content: "<p>Hospital Sungai Bakap</p>",
+          },
+          {
+            coords: { lat: 5.3502, lng: 100.2331 },
+            content: "<p>Hospital Balik Pulau</p>",
+          },
+          {
+            coords: { lat: 5.5126, lng: 100.4366 },
+            content: "<p>Hospital Kepala Batas</p>",
+          },
+          {
+            coords: { lat: 5.3952, lng: 100.4067 },
+            content: "<p>Hospital Seberang Jaya</p>",
+          },
+          {
+            coords: { lat: 4.6023, lng: 101.0966 },
+            content: "<p>Hospital Raja Permaisuri Bainun</p>",
+          },
+          {
+            coords: { lat: 4.0046, lng: 101.0403 },
+            content: "<p>Hospital Teluk Intan</p>",
+          },
+          {
+            coords: { lat: 5.429, lng: 101.1279 },
+            content: "<p>Hospital Gerik</p>",
+          },
+          {
+            coords: { lat: 3.8371, lng: 101.4041 },
+            content: "<p>Hospital Slim River</p>",
+          },
+          {
+            coords: { lat: 5.1311, lng: 100.4837 },
+            content: "<p>Hospital Parit Buntar</p>",
+          },
+          {
+            coords: { lat: 4.1858, lng: 100.6623 },
+            content: "<p>Hospital Seri Manjung</p>",
+          },
+          {
+            coords: { lat: 4.7731, lng: 100.932 },
+            content: "<p>Hospital Kuala Kangsar</p>",
+          },
+          {
+            coords: { lat: 4.8511, lng: 100.7369 },
+            content: "<p>Hospital Taiping</p>",
+          },
+          {
+            coords: { lat: 4.3119, lng: 101.1564 },
+            content: "<p>Hospital Kampar</p>",
+          },
+          {
+            coords: { lat: 4.2019, lng: 101.2596 },
+            content: "<p>Hospital Tapah</p>",
+          },
+          {
+            coords: { lat: 4.4794, lng: 101.035 },
+            content: "<p>Hospital Batu Gajah</p>",
+          },
+          {
+            coords: { lat: 4.313, lng: 100.9105 },
+            content: "<p>Hospital Changkat Melintang</p>",
+          },
+          {
+            coords: { lat: 5.2131, lng: 100.6889 },
+            content: "<p>Hospital Selama</p>",
+          },
+          {
+            coords: { lat: 4.8279, lng: 101.0571 },
+            content: "<p>Hospital Sungai Siput</p>",
+          },
+          {
+            coords: { lat: 3.0199, lng: 101.4405 },
+            content: "<p>Hospital Tengku Ampuan Rahimah</p>",
+          },
+          {
+            coords: { lat: 2.9929, lng: 101.7928 },
+            content: "<p>Hospital Kajang</p>",
+          },
+          {
+            coords: { lat: 2.8029, lng: 101.4938 },
+            content: "<p>Hospital Banting</p>",
+          },
+          {
+            coords: { lat: 3.4253, lng: 101.1789 },
+            content: "<p>Hospital Tanjung Karang</p>",
+          },
+          {
+            coords: { lat: 3.5642, lng: 101.6531 },
+            content: "<p>Hospital Kuala Kubu Bharu</p>",
+          },
+          {
+            coords: { lat: 3.2432, lng: 101.6468 },
+            content: "<p>Hospital Selayang</p>",
+          },
+          {
+            coords: { lat: 2.9762, lng: 101.7202 },
+            content: "<p>Hospital Serdang</p>",
+          },
+          {
+            coords: { lat: 3.2196, lng: 101.5831 },
+            content: "<p>Hospital Sungai Buloh</p>",
+          },
+          {
+            coords: { lat: 3.1282, lng: 101.764 },
+            content: "<p>Hospital Ampang</p>",
+          },
+          {
+            coords: { lat: 3.7613, lng: 100.9898 },
+            content: "<p>Hospital Tengku Ampuan Jemaah</p>",
+          },
+          {
+            coords: { lat: 3.292, lng: 101.731 },
+            content: "<p>Hospital Orang Asli</p>",
+          },
+          {
+            coords: { lat: 3.0709, lng: 101.4901 },
+            content: "<p>Hospital Shah Alam</p>",
+          },
+          {
+            coords: { lat: 3.1719, lng: 101.7012 },
+            content: "<p>Hospital Kuala Lumpur</p>",
+          },
+          {
+            coords: { lat: 2.9291, lng: 101.6742 },
+            content: "<p>Hospital Putrajaya</p>",
+          },
+          {
+            coords: { lat: 2.7091, lng: 101.9436 },
+            content: "<p>Hospital Tuanku Jaafar</p>",
+          },
+          {
+            coords: { lat: 2.7349, lng: 102.2331 },
+            content: "<p>Hospital Tuanku Ampuan Najihah</p>",
+          },
+          {
+            coords: { lat: 2.4848, lng: 102.2336 },
+            content: "<p>Hospital Tampin</p>",
+          },
+          {
+            coords: { lat: 2.4777, lng: 101.855 },
+            content: "<p>Hospital Port Dickson</p>",
+          },
+          {
+            coords: { lat: 2.9503, lng: 102.0591 },
+            content: "<p>Hospital Jelebu</p>",
+          },
+          {
+            coords: { lat: 2.9033, lng: 102.406 },
+            content: "<p>Hospital Jempol</p>",
+          },
+          {
+            coords: { lat: 2.219, lng: 102.2615 },
+            content: "<p>Hospital Melaka</p>",
+          },
+          {
+            coords: { lat: 2.3954, lng: 102.202 },
+            content: "<p>Hospital Alor Gajah</p>",
+          },
+          {
+            coords: { lat: 2.3049, lng: 102.4284 },
+            content: "<p>Hospital Jasin</p>",
+          },
+          {
+            coords: { lat: 1.4585, lng: 103.7459 },
+            content: "<p>Hospital Sultanah Aminah</p>",
+          },
+          {
+            coords: { lat: 2.0571, lng: 102.5744 },
+            content: "<p>Hospital Pakar Sultanah Fatimah</p>",
+          },
+          {
+            coords: { lat: 1.8369, lng: 102.9408 },
+            content: "<p>Hospital Sultanah Nora Ismail</p>",
+          },
+          {
+            coords: { lat: 2.0081, lng: 103.3471 },
+            content: "<p>Hospital Enche' Besar Hajjah Khalsom</p>",
+          },
+          {
+            coords: { lat: 2.4933, lng: 102.8591 },
+            content: "<p>Hospital Segamat</p>",
+          },
+          {
+            coords: { lat: 1.4985, lng: 103.3852 },
+            content: "<p>Hospital Pontian</p>",
+          },
+          {
+            coords: { lat: 1.735, lng: 103.8995 },
+            content: "<p>Hospital Kota Tinggi</p>",
+          },
+          {
+            coords: { lat: 2.4294, lng: 103.8454 },
+            content: "<p>Hospital Mersing</p>",
+          },
+          {
+            coords: { lat: 2.2721, lng: 102.5468 },
+            content: "<p>Hospital Tangkak</p>",
+          },
+          {
+            coords: { lat: 1.5463, lng: 103.7909 },
+            content: "<p>Hospital Sultan Ismail</p>",
+          },
+          {
+            coords: { lat: 1.639789, lng: 103.623851 },
+            content: "<p>Hospital T.S. Maharaja Tun Ibrahim</p>",
+          },
+          {
+            coords: { lat: 3.8009, lng: 103.3215 },
+            content: "<p>Hospital Tuanku Ampuan Afzan</p>",
+          },
+          {
+            coords: { lat: 3.4532, lng: 102.4532 },
+            content: "<p>Hospital Sultan Haji Ahmad Shah</p>",
+          },
+          {
+            coords: { lat: 3.5023, lng: 103.3801 },
+            content: "<p>Hospital Pekan</p>",
+          },
+          {
+            coords: { lat: 3.9293, lng: 102.3602 },
+            content: "<p>Hospital Jerantut</p>",
+          },
+          {
+            coords: { lat: 4.1826, lng: 102.0556 },
+            content: "<p>Hospital Kuala Lipis</p>",
+          },
+          {
+            coords: { lat: 3.8096, lng: 101.8528 },
+            content: "<p>Hospital Raub</p>",
+          },
+          {
+            coords: { lat: 3.5264, lng: 101.9062 },
+            content: "<p>Hospital Bentong</p>",
+          },
+          {
+            coords: { lat: 3.7731, lng: 102.5517 },
+            content: "<p>Hospital Jengka</p>",
+          },
+          {
+            coords: { lat: 4.467074, lng: 101.391273 },
+            content: "<p>Hospital Sultanah Hajjah Kalsom</p>",
+          },
+          {
+            coords: { lat: 3.0538, lng: 103.0909 },
+            content: "<p>Hospital Muadzam Shah</p>",
+          },
+          {
+            coords: { lat: 2.7961, lng: 103.4961 },
+            content: "<p>Hospital Rompin</p>",
+          },
+          {
+            coords: { lat: 5.324034, lng: 103.150738 },
+            content: "<p>Hospital Sultanah Nur Zahirah</p>",
+          },
+          {
+            coords: { lat: 5.7297, lng: 102.4926 },
+            content: "<p>Hospital Besut</p>",
+          },
+          {
+            coords: { lat: 4.7519, lng: 103.4148 },
+            content: "<p>Hospital Dungun</p>",
+          },
+          {
+            coords: { lat: 4.2319, lng: 103.4204 },
+            content: "<p>Hospital Kemaman</p>",
+          },
+          {
+            coords: { lat: 5.0732, lng: 103.0448 },
+            content: "<p>Hospital Hulu Trengganu</p>",
+          },
+          {
+            coords: { lat: 5.5144, lng: 102.7693 },
+            content: "<p>Hospital Setiu</p>",
+          },
+          {
+            coords: { lat: 6.1253, lng: 102.2457 },
+            content: "<p>Hospital Raja Perempuan Zainab II</p>",
+          },
+          {
+            coords: { lat: 5.5359, lng: 102.1991 },
+            content: "<p>Hospital Kuala Krai</p>",
+          },
+          {
+            coords: { lat: 5.7632, lng: 102.2258 },
+            content: "<p>Hospital Machang</p>",
+          },
+          {
+            coords: { lat: 6.1897, lng: 102.1573 },
+            content: "<p>Hospital Tumpat</p>",
+          },
+          {
+            coords: { lat: 5.81, lng: 102.1523 },
+            content: "<p>Hospital Tanah Merah</p>",
+          },
+          {
+            coords: { lat: 6.014, lng: 102.119 },
+            content: "<p>Hospital Pasir Mas</p>",
+          },
+          {
+            coords: { lat: 4.8597, lng: 101.9548 },
+            content: "<p>Hospital Gua Musang</p>",
+          },
+          {
+            coords: { lat: 5.7013, lng: 101.8443 },
+            content: "<p>Hospital Jeli</p>",
+          },
+          {
+            coords: { lat: 5.833, lng: 102.3878 },
+            content: "<p>Hospital Tengku Anis</p>",
+          },
+          {
+            coords: { lat: 5.9568, lng: 116.0726 },
+            content: "<p>Hospital Queen Elizabeth</p>",
+          },
+          {
+            coords: { lat: 5.966573, lng: 116.093771 },
+            content: "<p>Hospital Queen Elizabeth II</p>",
+          },
+          {
+            coords: { lat: 5.859, lng: 118.103 },
+            content: "<p>Hospital Duchess Of Kent</p>",
+          },
+          {
+            coords: { lat: 4.2497, lng: 117.8807 },
+            content: "<p>Hospital Tawau</p>",
+          },
+          {
+            coords: { lat: 6.9067, lng: 116.8379 },
+            content: "<p>Hospital Kudat</p>",
+          },
+          {
+            coords: { lat: 6.3449, lng: 116.427 },
+            content: "<p>Hospital Kota Belud</p>",
+          },
+          {
+            coords: { lat: 5.7269, lng: 115.9238 },
+            content: "<p>Hospital Papar</p>",
+          },
+          {
+            coords: { lat: 5.351414, lng: 115.741099 },
+            content: "<p>Hospital Beaufort</p>",
+          },
+          {
+            coords: { lat: 5.9543, lng: 116.6694 },
+            content: "<p>Hospital Ranau</p>",
+          },
+          {
+            coords: { lat: 5.6825, lng: 116.371 },
+            content: "<p>Hospital Tambunan</p>",
+          },
+          {
+            coords: { lat: 5.3701, lng: 116.182 },
+            content: "<p>Hospital Keningau</p>",
+          },
+          {
+            coords: { lat: 5.0267, lng: 118.3137 },
+            content: "<p>Hospital Lahad Datu</p>",
+          },
+          {
+            coords: { lat: 5.585, lng: 117.8504 },
+            content: "<p>Hospital Kinabatangan</p>",
+          },
+          {
+            coords: { lat: 5.1232, lng: 115.9413 },
+            content: "<p>Hospital Tenom</p>",
+          },
+          {
+            coords: { lat: 5.8935, lng: 117.5554 },
+            content: "<p>Hospital Beluran</p>",
+          },
+          {
+            coords: { lat: 4.4828, lng: 118.6045 },
+            content: "<p>Hospital Semporna</p>",
+          },
+          {
+            coords: { lat: 5.0965, lng: 115.563 },
+            content: "<p>Hospital Sipitang</p>",
+          },
+          {
+            coords: { lat: 6.4574, lng: 116.776 },
+            content: "<p>Hospital Kota Marudu</p>",
+          },
+          {
+            coords: { lat: 5.5603, lng: 115.5856 },
+            content: "<p>Hospital Kuala Penyu</p>",
+          },
+          {
+            coords: { lat: 6.7119, lng: 117.0296 },
+            content: "<p>Hospital Pitas</p>",
+          },
+          {
+            coords: { lat: 4.6771, lng: 118.2323 },
+            content: "<p>Hospital Kunak</p>",
+          },
+          {
+            coords: { lat: 6.1439, lng: 116.219 },
+            content: "<p>Hospital Tuaran</p>",
+          },
+          {
+            coords: { lat: 5.3111, lng: 115.23 },
+            content: "<p>Hospital Labuan</p>",
+          },
+          {
+            coords: { lat: 1.5436, lng: 110.3396 },
+            content: "<p>Hospital Umum Sarawak</p>",
+          },
+          {
+            coords: { lat: 1.389258, lng: 110.322393 },
+            content: "<p>Hospital Raja Charles Brooke Memorial</p>",
+          },
+          {
+            coords: { lat: 1.2344, lng: 111.4629 },
+            content: "<p>Hospital Sri Aman</p>",
+          },
+          {
+            coords: { lat: 2.2965, lng: 111.8919 },
+            content: "<p>Hospital Sibu</p>",
+          },
+          {
+            coords: { lat: 4.3744, lng: 113.9998 },
+            content: "<p>Hospital Miri</p>",
+          },
+          {
+            coords: { lat: 4.7643, lng: 115.019 },
+            content: "<p>Hospital Limbang</p>",
+          },
+          {
+            coords: { lat: 2.132, lng: 111.492 },
+            content: "<p>Hospital Sarikei</p>",
+          },
+          {
+            coords: { lat: 2.0139, lng: 112.9427 },
+            content: "<p>Hospital Kapit</p>",
+          },
+          {
+            coords: { lat: 1.6756, lng: 109.8528 },
+            content: "<p>Hospital Lundu</p>",
+          },
+          {
+            coords: { lat: 1.1763, lng: 110.5636 },
+            content: "<p>Hospital Serian</p>",
+          },
+          {
+            coords: { lat: 1.37, lng: 110.7863 },
+            content: "<p>Hospital Simunjan</p>",
+          },
+          {
+            coords: { lat: 1.7473, lng: 111.3404 },
+            content: "<p>Hospital Saratok</p>",
+          },
+          {
+            coords: { lat: 2.9008, lng: 112.0764 },
+            content: "<p>Hospital Mukah</p>",
+          },
+          {
+            coords: { lat: 3.2297, lng: 113.101 },
+            content: "<p>Hospital Bintulu</p>",
+          },
+          {
+            coords: { lat: 4.1784, lng: 114.3254 },
+            content: "<p>Hospital Marudi</p>",
+          },
+          {
+            coords: { lat: 4.8544, lng: 115.4046 },
+            content: "<p>Hospital Lawas</p>",
+          },
+          {
+            coords: { lat: 2.1028, lng: 112.1523 },
+            content: "<p>Hospital Kanowit</p>",
+          },
+          {
+            coords: { lat: 1.4295, lng: 110.1426 },
+            content: "<p>Hospital Bau</p>",
+          },
+          {
+            coords: { lat: 2.5218, lng: 111.4132 },
+            content: "<p>Hospital Daro</p>",
+          },
+          {
+            coords: { lat: 1.374, lng: 111.5738 },
+            content: "<p>Hospital Betong</p>",
+          },
+          {
+            coords: { lat: 2.745303, lng: 111.946106 },
+            content: "<p>Hospital Dalat</p>",
+          },
+          {
+            coords: { lat: 1.481266, lng: 110.418981 },
+            content: "<p>Pusat Jantung Sarawak</p>",
+          },
+          {
+            coords: { lat: 4.6756, lng: 101.1507 },
+            content: "<p>Hospital Bahagia</p>",
+          },
+          {
+            coords: { lat: 1.5215, lng: 103.7066 },
+            content: "<p>Hospital Permai</p>",
+          },
+          {
+            coords: { lat: 3.1755, lng: 101.6993 },
+            content: "<p>Institut Perubatan Respiratori</p>",
+          },
+          {
+            coords: { lat: 2.9269, lng: 101.6739 },
+            content: "<p>Institut Kanser Negara</p>",
+          },
+          {
+            coords: { lat: 3.2217, lng: 101.5837 },
+            content: "<p>Pusat Kawalan Kusta Negara</p>",
+          },
+          {
+            coords: { lat: 5.9505, lng: 116.1053 },
+            content: "<p>Hospital Mesra Bukit Padang</p>",
+          },
+          {
+            coords: { lat: 1.463254, lng: 110.329944 },
+            content: "<p>Hospital Sentosa</p>",
+          },
+          {
+            coords: { lat: 6.0138, lng: 116.1195 },
+            content: "<p>Hospital Wanita dan Kanak-Kanak, Likas</p>",
+          },
+          {
+            coords: { lat: 3.104819, lng: 101.730237 },
+            content: "<p>Hospital Rehabilitasi Cheras</p>",
+          },
+        ];
+
+        // Loop through markers
+        for (var i = 0; i < markers.length; i++) {
+          // Add marker
+          addMarker(markers[i]);
+        }
+
+        // Add map Markers
+        function addMarker(values) {
+          var marker = new google.maps.Marker({
+            position: values.coords,
+            map: map,
+            icon: {
+              url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+            },
+            animation: google.maps.Animation.DROP,
+            animation: google.maps.Animation.BOUNCE,
+          });
+
+          // Check content
+          if (values.content) {
+            var infoWindow = new google.maps.InfoWindow({
+              content: values.content,
+            });
+            marker.addListener("mouseover", function () {
+              infoWindow.open(map, marker);
+            });
+
+            marker.addListener("mouseout", function () {
+              infoWindow.close(map, marker);
+            });
+          }
+
+          marker.addListener("click", () => {
+            map.setZoom(16);
+            map.setCenter(marker.getPosition());
+          });
+
+          marker.addListener("dblclick", () => {
+            map.setZoom(7);
+            map.setCenter(marker.getPosition());
+          });
+        }
+      }
+    </script>
+  </body>
+</html>

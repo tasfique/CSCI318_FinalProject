@@ -1,0 +1,389 @@
+<html lang="en">
+  <%- include("./partials/head.ejs") %>
+
+  <body>
+    <%- include("./partials/nav.ejs") %>
+
+    <label>By <strong>Chart Type</strong>: </label>
+    <select
+      class="select-css"
+      name="chartType"
+      id="chartType"
+      onchange="displayChart()"
+    >
+      <option>---</option>
+      <option value="bar">Bar Chart</option>
+      <option value="pie">Pie Chart</option>
+      <option value="polarArea">Polar Area</option>
+      <option value="radar">Radar</option>
+    </select>
+    <br />
+
+    <div id="chartContainer">
+      <canvas id="chart"></canvas>
+    </div>
+
+    <%- include("./partials/footer.ejs") %>
+    <script>
+      if (document.title == "Teh Tarik | Data") {
+        swal(
+          "No data!",
+          "Please select the data set and display it in home page first, then the chart can be shown!",
+          "warning"
+        );
+      } else {
+        // function to clear the canvas to draw new chart everytime user choose new type of chart
+        function clearCanvas() {
+          $("#chart").remove(); // this is my <canvas> element
+          $("#chartContainer").append('<canvas id="chart"><canvas>');
+          canvas = document.querySelector("#chart");
+          ctx = canvas.getContext("2d");
+          ctx.canvas.width = 80;
+          ctx.canvas.height = 70;
+        }
+
+        // declare the variables
+        var count = 0;
+        var officialBeds = [],
+          operatingBeds = [],
+          state = [],
+          patientAdmission = [],
+          averageStay = [],
+          stateInfo = [],
+          stateInfo2 = [];
+        var dataSet = "<%= staticdatas %>";
+        var dataSetArr = dataSet.split(",");
+        dataSet = [];
+        dataSet[count] = [];
+
+        // get the dataset and save it into a dataSet variable
+        for (var i = 0; i < dataSetArr.length; i++) {
+          dataSet[count].push(dataSetArr[i]);
+          if ((i + 1) % 10 == 0) {
+            count++;
+            dataSet[count] = [];
+          }
+        }
+
+        for (var i = 0; i < dataSet.length; i++) {
+          if (dataSet[i][0] == "Total") {
+            officialBeds.push(dataSet[i][3]);
+            operatingBeds.push(dataSet[i][4]);
+            state.push(dataSet[i][1]);
+            patientAdmission.push(dataSet[i][5]);
+            averageStay.push(dataSet[i][8]);
+            stateInfo.push(dataSet[i]);
+          }
+        }
+
+        for (var i = 0; i < stateInfo.length; i++) {
+          stateInfo2[i] = [];
+          for (var j = 3; j < stateInfo[i].length; j++) {
+            if (j != 5) {
+              stateInfo2[i].push(stateInfo[i][j]);
+            }
+          }
+        }
+
+        var barChartData = {
+          labels: state,
+          datasets: [
+            {
+              label: "Operating Beds",
+              backgroundColor: "#3cba9f",
+              stack: "Stack 0",
+              data: operatingBeds,
+            },
+            {
+              label: "Official Beds",
+              backgroundColor: "#3e95cd",
+              data: officialBeds,
+            },
+          ],
+        };
+
+        function displayChart() {
+          var graphType = document.getElementById("chartType").value;
+
+          // Bar chart
+          if (graphType == "bar") {
+            clearCanvas();
+            new Chart(document.getElementById("chart"), {
+              type: "bar",
+              data: barChartData,
+              options: {
+                title: {
+                  display: true,
+                  text: "Total Number Of Hospital Beds In Each State",
+                },
+                tooltips: {
+                  mode: "index",
+                  intersect: false,
+                },
+                responsive: true,
+              },
+            });
+          }
+          // pie chart
+          else if (graphType == "pie") {
+            clearCanvas();
+            new Chart(document.getElementById("chart"), {
+              type: "pie",
+              data: {
+                labels: state,
+                datasets: [
+                  {
+                    label: "Patient Admission",
+                    backgroundColor: [
+                      "#3e95cd",
+                      "#8e5ea2",
+                      "#3cba9f",
+                      "#e8c3b9",
+                      "#c45850",
+                      "#EF9A9A",
+                      "#F8BBD0",
+                      "#E1BEE7",
+                      "#B39DDB",
+                      "#7986CB",
+                      "#BBDEFB",
+                      "#40C4FF",
+                      "#00B8D4",
+                      "#64FFDA",
+                      "#81C784",
+                      "#CCFF90",
+                      "#9E9D24",
+                    ],
+                    data: patientAdmission,
+                  },
+                ],
+              },
+              options: {
+                title: {
+                  display: true,
+                  text: "Total Patient Admission In Each State",
+                }              },
+            });
+            // polar area
+          } else if (graphType == "polarArea") {
+            clearCanvas();
+            new Chart(document.getElementById("chart"), {
+              type: "polarArea",
+              data: {
+                labels: state,
+                datasets: [
+                  {
+                    label: "Average Stay (Day)",
+                    backgroundColor: [
+                      "#3e95cd",
+                      "#8e5ea2",
+                      "#3cba9f",
+                      "#e8c3b9",
+                      "#c45850",
+                      "#EF9A9A",
+                      "#F8BBD0",
+                      "#E1BEE7",
+                      "#B39DDB",
+                      "#7986CB",
+                      "#BBDEFB",
+                      "#40C4FF",
+                      "#00B8D4",
+                      "#64FFDA",
+                      "#81C784",
+                      "#CCFF90",
+                      "#9E9D24",
+                    ],
+                    data: averageStay,
+                  },
+                ],
+              },
+              options: {
+                title: {
+                  display: true,
+                  text: "Average Stay Day In Hospital In Each State",
+                },
+              },
+            });
+            // radar
+          } else if (graphType == "radar") {
+            clearCanvas();
+            new Chart(document.getElementById("chart"), {
+              type: "radar",
+              data: {
+                labels: [
+                  "No of Offical Beds",
+                  "No of Operating Beds",
+                  "Daily Average Admission",
+                  "Bed Usage Rate (%)",
+                  "Average Stay (Day)",
+                  "Bed Duration Cleared (Day)",
+                ],
+                datasets: [
+                  {
+                    label: state[0],
+                    fill: true,
+                    backgroundColor: "#3e95cd",
+                    borderColor: "#3e95cd",
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#3e95cd",
+                    data: stateInfo2[0],
+                  },
+                  {
+                    label: state[1],
+                    fill: true,
+                    backgroundColor: "#8e5ea2",
+                    borderColor: "#8e5ea2",
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#8e5ea2",
+                    data: stateInfo2[1],
+                  },
+                  {
+                    label: state[2],
+                    fill: true,
+                    backgroundColor: "#3cba9f",
+                    borderColor: "#3cba9f",
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#3cba9f",
+                    data: stateInfo2[2],
+                  },
+                  {
+                    label: state[3],
+                    fill: true,
+                    backgroundColor: "#e8c3b9",
+                    borderColor: "#e8c3b9",
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#e8c3b9",
+                    data: stateInfo2[3],
+                  },
+                  {
+                    label: state[4],
+                    fill: true,
+                    backgroundColor: "#c45850",
+                    borderColor: "#c45850",
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#c45850",
+                    data: stateInfo2[4],
+                  },
+                  {
+                    label: state[5],
+                    fill: true,
+                    backgroundColor: "#EF9A9A",
+                    borderColor: "#EF9A9A",
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#EF9A9A",
+                    data: stateInfo2[5],
+                  },
+                  {
+                    label: state[6],
+                    fill: true,
+                    backgroundColor: "#F8BBD0",
+                    borderColor: "#F8BBD0",
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#F8BBD0",
+                    data: stateInfo2[6],
+                  },
+                  {
+                    label: state[7],
+                    fill: true,
+                    backgroundColor: "#E1BEE7",
+                    borderColor: "#E1BEE7",
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#E1BEE7",
+                    data: stateInfo2[7],
+                  },
+                  {
+                    label: state[8],
+                    fill: true,
+                    backgroundColor: "#B39DDB",
+                    borderColor: "#B39DDB",
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#B39DDB",
+                    data: stateInfo2[8],
+                  },
+                  {
+                    label: state[9],
+                    fill: true,
+                    backgroundColor: "#7986CB",
+                    borderColor: "#7986CB",
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#7986CB",
+                    data: stateInfo2[9],
+                  },
+                  {
+                    label: state[10],
+                    fill: true,
+                    backgroundColor: "#BBDEFB",
+                    borderColor: "#BBDEFB",
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#BBDEFB",
+                    data: stateInfo2[10],
+                  },
+                  {
+                    label: state[11],
+                    fill: true,
+                    backgroundColor: "#40C4FF",
+                    borderColor: "#40C4FF",
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#40C4FF",
+                    data: stateInfo2[11],
+                  },
+                  {
+                    label: state[12],
+                    fill: true,
+                    backgroundColor: "#00B8D4",
+                    borderColor: "#00B8D4",
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#00B8D4",
+                    data: stateInfo2[12],
+                  },
+                  {
+                    label: state[13],
+                    fill: true,
+                    backgroundColor: "#64FFDA",
+                    borderColor: "#64FFDA",
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#64FFDA",
+                    data: stateInfo2[13],
+                  },
+                  {
+                    label: state[14],
+                    fill: true,
+                    backgroundColor: "#81C784",
+                    borderColor: "#81C784",
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#81C784",
+                    data: stateInfo2[14],
+                  },
+                  {
+                    label: state[15],
+                    fill: true,
+                    backgroundColor: "#CCFF90",
+                    borderColor: "#CCFF90",
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#CCFF90",
+                    data: stateInfo2[15],
+                  },
+                  {
+                    label: state[16],
+                    fill: true,
+                    backgroundColor: "#9E9D24",
+                    borderColor: "#9E9D24",
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "#9E9D24",
+                    data: stateInfo2[16],
+                  },
+                ],
+              },
+              options: {
+                title: {
+                  display: true,
+                  text: "Overall Information Of Hospitals In Each State",
+                },
+              },
+            });
+          }
+        }
+      }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+  </body>
+</html>
